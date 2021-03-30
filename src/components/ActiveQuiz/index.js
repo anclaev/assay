@@ -5,11 +5,17 @@ import AnswersList from "../AnswersList";
 const ActiveQuiz = (props) => (
   <div className={classes.activeQuiz}>
     <p className={classes.question}>
-      <span>2. Как дела?</span>
-      <small>4 из 12</small>
+      <span>{props.question}</span>
+      <small>
+        {props.answerNumber} из {props.quizLength}
+      </small>
     </p>
 
-    <AnswersList answers={props.answers} />
+    <AnswersList
+      state={props.state}
+      answers={props.answers}
+      onAnswerClick={props.onAnswerClick}
+    />
   </div>
 );
 

@@ -12,5 +12,5 @@ ReactDOM.render(
       <Quiz />
     </Layout>
   </React.StrictMode>,
-  document.body
+  document.getElementById("root")
 );
