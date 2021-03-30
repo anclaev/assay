@@ -1,1 +1,11 @@
+=flexColumn
+    display: flex
+    flex-direction: column
+
 .layout
+    height: 100vh
+    +flexColumn
+
+    & > main
+        +flexColumn
+        flex-grow: 1

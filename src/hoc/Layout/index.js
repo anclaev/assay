@@ -1,5 +1,9 @@
-import classes from "./layout.module.sass";
+import classes from "./Layout.module.sass";
 
-const Layout = () => <main className={classes.layout}>1</main>;
+const Layout = (props) => (
+  <div className={classes.layout}>
+    <main>{props.children}</main>
+  </div>
+);
 
 export default Layout;
