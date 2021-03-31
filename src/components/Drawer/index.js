@@ -10,6 +10,10 @@ const links = [
 ];
 
 class Drawer extends Component {
+  clickHandler = () => {
+    this.props.onClose();
+  };
+
   renderLinks() {
     return links.map((link, index) => {
       return (
@@ -18,6 +22,7 @@ class Drawer extends Component {
             to={link.to}
             exact={link.exact}
             activeClassName={classes.active}
+            onClick={this.clickHandler}
           >
             {link.name}
           </NavLink>
@@ -36,7 +41,7 @@ class Drawer extends Component {
         >
           <ul>{this.renderLinks()}</ul>
         </nav>
-        {this.props.isOpen ? <Backdrop onClick={this.props.onClose} /> : null}
+        {this.props.isOpen ? <Backdrop onClick={this.clickHandler} /> : null}
       </>
     );
   }
