@@ -85,7 +85,7 @@ export default class Auth extends Component {
           type={control.type}
           value={control.value}
           valid={control.valid}
-          touched={control.valid}
+          touched={control.touched}
           label={control.label}
           error={control.error}
           shouldValidate={!!control.validation}

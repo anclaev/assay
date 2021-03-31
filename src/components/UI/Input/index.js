@@ -1,7 +1,7 @@
 import classes from "./Input.module.sass";
 
 const isInvalid = ({ valid, touched, shouldValidate }) =>
-  valid && shouldValidate && touched;
+  touched && shouldValidate && !valid;
 
 const Input = (props) => {
   const inputType = props.type || "text";
@@ -9,7 +9,7 @@ const Input = (props) => {
 
   return (
     <div
-      className={`${classes.input} ${!isInvalid(props) ? classes.error : null}`}
+      className={`${classes.input} ${isInvalid(props) ? classes.error : null}`}
     >
       <label htmlFor={htmlFor}>{props.label}</label>
       <input
@@ -18,7 +18,7 @@ const Input = (props) => {
         value={props.value}
         onChange={props.onChange}
       />
-      {!isInvalid(props) ? (
+      {isInvalid(props) ? (
         <span>{props.error || "Проверьте правильность данных"}</span>
       ) : null}
     </div>
