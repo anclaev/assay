@@ -1,4 +1,5 @@
 import classes from "./FinishedQuiz.module.sass";
+import { Link } from "react-router-dom";
 
 import Button from "../UI/Button";
 
@@ -32,7 +33,9 @@ const FinishedQuiz = (props) => {
           Правильных ответов: {successCount} из {props.quiz.length}
         </span>
         <Button onClick={props.onRetry}>Пройти ещё раз</Button>
-        <Button>Перейти к тестам</Button>
+        <Link to="/">
+          <Button>Перейти к тестам</Button>
+        </Link>
       </div>
     </div>
   );
