@@ -16,7 +16,6 @@ export default class Auth extends Component {
         value: "",
         type: "email",
         label: "E-mail",
-        error: "Введите корректный email",
         valid: false,
         touched: false,
         validation: {
@@ -28,7 +27,6 @@ export default class Auth extends Component {
         value: "",
         type: "password",
         label: "Пароль",
-        error: "Введите корректный пароль",
         valid: false,
         touched: false,
         validation: {
@@ -96,7 +94,6 @@ export default class Auth extends Component {
           valid={control.valid}
           touched={control.touched}
           label={control.label}
-          error={control.error}
           shouldValidate={!!control.validation}
           onChange={(event) => this.onChangeHandler(event, controlName)}
         />
