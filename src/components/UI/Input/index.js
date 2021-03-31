@@ -18,9 +18,6 @@ const Input = (props) => {
         value={props.value}
         onChange={props.onChange}
       />
-      {isInvalid(props) ? (
-        <span>{props.error || "Проверьте правильность данных"}</span>
-      ) : null}
     </div>
   );
 };

@@ -10,6 +10,7 @@ const validateEmail = (email) => {
 
 export default class Auth extends Component {
   state = {
+    isFormValid: false,
     formControls: {
       email: {
         value: "",
@@ -32,7 +33,7 @@ export default class Auth extends Component {
         touched: false,
         validation: {
           required: true,
-          minLength: 6,
+          minLength: 10,
         },
       },
     },
@@ -69,8 +70,16 @@ export default class Auth extends Component {
     control.value = event.target.value;
     control.touched = true;
     control.valid = this.validate(control.value, control.validation);
+
     formControls[controlName] = control;
-    this.setState({ formControls });
+
+    let isFormValid = true;
+
+    Object.keys(formControls).forEach((name) => {
+      isFormValid = formControls[name].valid && isFormValid;
+    });
+
+    this.setState({ isFormValid, formControls });
   };
 
   loginHandler() {}
@@ -102,8 +111,18 @@ export default class Auth extends Component {
           <h1 className={classes.title}>Войти</h1>
           <form onSubmit={this.submitHandler} className={classes.form}>
             {this.renderInputs()}
-            <Button onClick={this.loginHandler}>Поехали!</Button>
-            <Button onClick={this.registerHandler}>Зарегистрироваться</Button>
+            <Button
+              onClick={this.loginHandler}
+              disabled={!this.state.isFormValid}
+            >
+              Поехали!
+            </Button>
+            <Button
+              onClick={this.registerHandler}
+              disabled={!this.state.isFormValid}
+            >
+              Зарегистрироваться
+            </Button>
           </form>
         </div>
       </div>
