@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import classes from "./All.module.sass";
+import Loader from "../../components/UI/Loader";
 
 export default class All extends Component {
   state = {
     quizes: [],
+    loading: true,
   };
 
   renderQuizes = () => {
@@ -32,7 +34,7 @@ export default class All extends Component {
           name: `Тест №${index + 1}`,
         });
 
-        this.setState({ quizes });
+        this.setState({ quizes, loading: false });
       });
     } catch (e) {
       console.log("e: ", e);
@@ -44,8 +46,7 @@ export default class All extends Component {
       <div className={classes.all}>
         <div className={classes.wrapper}>
           <h1 className={classes.title}>Квизы</h1>
-
-          <ul>{this.renderQuizes()}</ul>
+          {this.state.loading ? <Loader /> : <ul>{this.renderQuizes()}</ul>}
         </div>
       </div>
     );
