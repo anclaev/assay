@@ -3,7 +3,7 @@
     display: flex
     flex-grow: 1
     justify-content: center
-    padding-top: 7%
+    padding-top: 2%
     background: linear-gradient(90deg, #5041b2 0%, #7969e6 100%)
 
 .title
@@ -15,7 +15,7 @@
 
 .form
     &>div
-        &:first-child
+        &:first-child, &:nth-last-child(4),&:nth-last-child(3)
             &::after
                 content: ""
                 display: block
@@ -24,9 +24,3 @@
                 background: #fff
                 opacity: .5
                 margin: 20px 0
-    &>hr
-        border: 0
-        height: 1px
-        background: #fff
-        opacity: .5
-        margin-bottom: 15px

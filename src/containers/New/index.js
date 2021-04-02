@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import classes from "./New.module.sass";
 import Input from "../../components/UI/Input";
+import Select from "../../components/UI/Select";
 import Button from "../../components/UI/Button";
 import { createControl } from "../../form";
 
 export default class New extends Component {
   state = {
     quiz: [],
+    rightAnswerId: 1,
     formControls: {
       question: createControl(
         {
@@ -45,6 +47,11 @@ export default class New extends Component {
   addQuestionHandler = () => {};
   createQuizeHandler = () => {};
   changeHandler = (value, controlName) => {};
+  selectChangeHandler = (event) => {
+    this.setState({
+      rightAnswerId: +event.target.value,
+    });
+  };
 
   renderInputs() {
     return Object.keys(this.state.formControls).map((controlName, index) => {
@@ -67,13 +74,26 @@ export default class New extends Component {
   }
 
   render() {
+    const select = (
+      <Select
+        label="Правильный ответ"
+        value={this.state.rightAnswerId}
+        onChange={this.selectChangeHandler}
+        options={[
+          { text: 1, value: 1 },
+          { text: 2, value: 2 },
+          { text: 3, value: 3 },
+          { text: 4, value: 4 },
+        ]}
+      />
+    );
     return (
       <div className={classes.new}>
         <div className={classes.wrapper}>
           <h1 className={classes.title}>Создать квиз</h1>
           <form onSubmit={this.submitHandler} className={classes.form}>
             {this.renderInputs()}
-            <select></select>
+            {select}
             <Button onClick={this.addQuestionHandler}>Добавить вопрос</Button>
             <Button onClick={this.createQuizeHandler}>Создать тест</Button>
           </form>
