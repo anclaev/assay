@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 import classes from "./New.module.sass";
 import Input from "../../components/UI/Input";
 import Select from "../../components/UI/Select";
@@ -127,10 +128,64 @@ export default class New extends Component {
       ],
     });
   };
-  createQuizeHandler = (event) => {
+  createQuizeHandler = async (event) => {
     event.preventDefault();
 
-    // TODO: Server
+    try {
+      await axios.post(
+        "https://ancla-assay-default-rtdb.firebaseio.com/quizes.json",
+        this.state.quiz
+      );
+      this.setState({
+        quiz: [],
+        isFormValid: false,
+        rightAnswerId: 1,
+        formControls: {
+          question: createControl(
+            {
+              label: "Вопрос",
+            },
+            { required: true }
+          ),
+          option1: createControl(
+            {
+              label: `Вариант №1`,
+              id: 1,
+            },
+            { required: true }
+          ),
+          option2: createControl(
+            {
+              label: `Вариант №2`,
+              id: 2,
+            },
+            { required: true }
+          ),
+          option3: createControl(
+            {
+              label: `Вариант №3`,
+              id: 3,
+            },
+            { required: true }
+          ),
+          option4: createControl(
+            {
+              label: `Вариант №4`,
+              id: 4,
+            },
+            { required: true }
+          ),
+        },
+        options: [
+          { text: "1", value: 1 },
+          { text: "2", value: 2 },
+          { text: "3", value: 3 },
+          { text: "4", value: 4 },
+        ],
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
   changeHandler = (value, controlName) => {
     const formControls = { ...this.state.formControls };
