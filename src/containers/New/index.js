@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-import axios from "../../axios/config";
 import classes from "./New.module.sass";
 import Input from "../../components/UI/Input";
 import Select from "../../components/UI/Select";
 import Button from "../../components/UI/Button";
 import { createControl, validate, validateForm } from "../../form";
+import { connect } from "react-redux";
+import {
+  createQuizQuestion,
+  finishCreateQuiz,
+} from "../../store/actions/create";
 
-export default class New extends Component {
+class New extends Component {
   state = {
-    quiz: [],
     isFormValid: false,
     rightAnswerId: 1,
     formControls: {
@@ -61,9 +64,6 @@ export default class New extends Component {
   addQuestionHandler = (event) => {
     event.preventDefault();
 
-    const quiz = this.state.quiz.concat();
-    const index = quiz.length + 1;
-
     const {
       quizName,
       question,
@@ -76,7 +76,7 @@ export default class New extends Component {
     const questionItem = {
       quizName: quizName,
       question: question.value,
-      id: index,
+      id: this.props.quiz.length + 1,
       rightAnswerId: this.state.rightAnswerId,
       answers: [
         { text: option1.value, id: option1.id },
@@ -86,10 +86,7 @@ export default class New extends Component {
       ],
     };
 
-    quiz.push(questionItem);
-
     this.setState({
-      quiz,
       isFormValid: false,
       rightAnswerId: 1,
       formControls: {
@@ -143,70 +140,66 @@ export default class New extends Component {
         { text: "4", value: 4 },
       ],
     });
+
+    this.props.createQuizQuestion(questionItem);
   };
 
-  createQuizeHandler = async (event) => {
+  createQuizeHandler = (event) => {
     event.preventDefault();
+    this.props.finishCreateQuiz();
 
-    try {
-      await axios.post(".json", this.state.quiz);
-
-      this.setState({
-        quiz: [],
-        isFormValid: false,
-        rightAnswerId: 1,
-        formControls: {
-          quizName: createControl(
-            {
-              label: "Название квиза",
-            },
-            { required: true }
-          ),
-          question: createControl(
-            {
-              label: "Вопрос",
-            },
-            { required: true }
-          ),
-          option1: createControl(
-            {
-              label: `Вариант №1`,
-              id: 1,
-            },
-            { required: true }
-          ),
-          option2: createControl(
-            {
-              label: `Вариант №2`,
-              id: 2,
-            },
-            { required: true }
-          ),
-          option3: createControl(
-            {
-              label: `Вариант №3`,
-              id: 3,
-            },
-            { required: true }
-          ),
-          option4: createControl(
-            {
-              label: `Вариант №4`,
-              id: 4,
-            },
-            { required: true }
-          ),
-        },
-        options: [
-          { text: "1", value: 1 },
-          { text: "2", value: 2 },
-          { text: "3", value: 3 },
-          { text: "4", value: 4 },
-        ],
-      });
-    } catch (e) {
-      console.log(e);
-    }
+    this.setState({
+      isFormValid: false,
+      rightAnswerId: 1,
+      formControls: {
+        quizName: createControl(
+          {
+            label: "Название квиза",
+          },
+          { required: true }
+        ),
+        question: createControl(
+          {
+            label: "Вопрос",
+          },
+          { required: true }
+        ),
+        option1: createControl(
+          {
+            label: `Вариант №1`,
+            id: 1,
+          },
+          { required: true }
+        ),
+        option2: createControl(
+          {
+            label: `Вариант №2`,
+            id: 2,
+          },
+          { required: true }
+        ),
+        option3: createControl(
+          {
+            label: `Вариант №3`,
+            id: 3,
+          },
+          { required: true }
+        ),
+        option4: createControl(
+          {
+            label: `Вариант №4`,
+            id: 4,
+          },
+          { required: true }
+        ),
+      },
+      options: [
+        { text: "1", value: 1 },
+        { text: "2", value: 2 },
+        { text: "3", value: 3 },
+        { text: "4", value: 4 },
+      ],
+    });
   };
 
   changeHandler = (value, controlName) => {
@@ -289,7 +282,7 @@ export default class New extends Component {
             </Button>
             <Button
               onClick={this.createQuizeHandler}
-              disabled={this.state.quiz.length === 0}
+              disabled={this.props.quiz.length === 0}
             >
               Создать тест
             </Button>
@@ -299,3 +292,18 @@ export default class New extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    quiz: state.create.quiz,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createQuizQuestion: (item) => dispatch(createQuizQuestion(item)),
+    finishCreateQuiz: () => dispatch(finishCreateQuiz()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(New);
