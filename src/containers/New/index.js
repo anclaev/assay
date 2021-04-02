@@ -20,24 +20,28 @@ export default class New extends Component {
       option1: createControl(
         {
           label: `Вариант №1`,
+          id: 1,
         },
         { required: true }
       ),
       option2: createControl(
         {
           label: `Вариант №2`,
+          id: 2,
         },
         { required: true }
       ),
       option3: createControl(
         {
           label: `Вариант №3`,
+          id: 3,
         },
         { required: true }
       ),
       option4: createControl(
         {
           label: `Вариант №4`,
+          id: 4,
         },
         { required: true }
       ),
@@ -53,8 +57,81 @@ export default class New extends Component {
   submitHandler = (event) => event.preventDefault();
   addQuestionHandler = (event) => {
     event.preventDefault();
+
+    const quiz = this.state.quiz.concat();
+    const index = quiz.length + 1;
+
+    const {
+      question,
+      option1,
+      option2,
+      option3,
+      option4,
+    } = this.state.formControls;
+
+    const questionItem = {
+      question: question.value,
+      id: index,
+      rightAnswerId: this.state.rightAnswerId,
+      answers: [
+        { text: option1.value, id: option1.id },
+        { text: option2.value, id: option2.id },
+        { text: option3.value, id: option3.id },
+        { text: option4.value, id: option4.id },
+      ],
+    };
+
+    quiz.push(questionItem);
+
+    this.setState({
+      quiz,
+      isFormValid: false,
+      rightAnswerId: 1,
+      formControls: {
+        question: createControl(
+          {
+            label: "Вопрос",
+          },
+          { required: true }
+        ),
+        option1: createControl(
+          {
+            label: `Вариант №1`,
+          },
+          { required: true }
+        ),
+        option2: createControl(
+          {
+            label: `Вариант №2`,
+          },
+          { required: true }
+        ),
+        option3: createControl(
+          {
+            label: `Вариант №3`,
+          },
+          { required: true }
+        ),
+        option4: createControl(
+          {
+            label: `Вариант №4`,
+          },
+          { required: true }
+        ),
+      },
+      options: [
+        { text: "1", value: 1 },
+        { text: "2", value: 2 },
+        { text: "3", value: 3 },
+        { text: "4", value: 4 },
+      ],
+    });
   };
-  createQuizeHandler = () => {};
+  createQuizeHandler = (event) => {
+    event.preventDefault();
+
+    // TODO: Server
+  };
   changeHandler = (value, controlName) => {
     const formControls = { ...this.state.formControls };
     const options = this.state.options;
@@ -67,9 +144,11 @@ export default class New extends Component {
     formControls[controlName] = control;
 
     if (controlName.slice(0, controlName.length - 1) === "option") {
-      let index = controlName.slice(controlName.length - 1, controlName.length);
-      if (control.valid) options[index - 1].text = value;
-      else options[index - 1].text = index;
+      const index = controlName.slice(
+        controlName.length - 1,
+        controlName.length
+      );
+      options[index - 1].text = control.valid ? value : index;
     }
 
     this.setState({
