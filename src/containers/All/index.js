@@ -1,18 +1,13 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "../../axios/config";
 import classes from "./All.module.sass";
 import Loader from "../../components/UI/Loader";
+import { connect } from "react-redux";
+import { fetchQuizes } from "../../store/actions/quiz";
 
-export default class All extends Component {
-  state = {
-    quizes: [],
-    loading: true,
-    emptyMessage: false,
-  };
-
+class All extends Component {
   renderQuizes = () => {
-    return this.state.quizes.map((quiz) => {
+    return this.props.quizes.map((quiz) => {
       return (
         <li className={classes.item} key={quiz.id}>
           <NavLink to={`/quiz/${quiz.id}`}>{quiz.name}</NavLink>
@@ -21,30 +16,8 @@ export default class All extends Component {
     });
   };
 
-  async componentDidMount() {
-    try {
-      const response = await axios.get(".json");
-      const quizes = [];
-
-      if (response.data != null) {
-        Object.keys(response.data).forEach((key, index) => {
-          quizes.push({
-            id: key,
-            name: `Тест №${index + 1}`,
-          });
-
-          this.setState({ quizes, loading: false });
-        });
-      } else {
-        var emptyMessage = this.state.emptyMessage;
-        var loading = this.state.loading;
-        emptyMessage = true;
-        loading = false;
-        this.setState({ emptyMessage, loading });
-      }
-    } catch (e) {
-      console.log("Error: ", e);
-    }
+  componentDidMount() {
+    this.props.fetchQuizes();
   }
 
   render() {
@@ -52,12 +25,28 @@ export default class All extends Component {
       <div className={classes.all}>
         <div className={classes.wrapper}>
           <h1 className={classes.title}>Квизы</h1>
-          {this.state.emptyMessage ? (
+          {this.props.emptyFlag ? (
             <span className={classes.empty}>Квизы пока не созданы.</span>
           ) : null}
-          {this.state.loading ? <Loader /> : <ul>{this.renderQuizes()}</ul>}
+          {this.props.loading ? <Loader /> : <ul>{this.renderQuizes()}</ul>}
         </div>
       </div>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    quizes: state.quiz.quizes,
+    loading: state.quiz.loading,
+    emptyFlag: state.quiz.emptyFlag,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchQuizes: () => dispatch(fetchQuizes()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(All);
