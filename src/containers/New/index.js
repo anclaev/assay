@@ -12,6 +12,7 @@ export default class New extends Component {
     isFormValid: false,
     rightAnswerId: 1,
     formControls: {
+      quizName: createControl({ label: "Название квиза" }, { required: true }),
       question: createControl(
         {
           label: "Вопрос",
@@ -56,6 +57,7 @@ export default class New extends Component {
   };
 
   submitHandler = (event) => event.preventDefault();
+
   addQuestionHandler = (event) => {
     event.preventDefault();
 
@@ -63,6 +65,7 @@ export default class New extends Component {
     const index = quiz.length + 1;
 
     const {
+      quizName,
       question,
       option1,
       option2,
@@ -71,6 +74,7 @@ export default class New extends Component {
     } = this.state.formControls;
 
     const questionItem = {
+      quizName: quizName,
       question: question.value,
       id: index,
       rightAnswerId: this.state.rightAnswerId,
@@ -89,6 +93,14 @@ export default class New extends Component {
       isFormValid: false,
       rightAnswerId: 1,
       formControls: {
+        quizName: createControl(
+          {
+            label: "Название квиза",
+            value: quizName.value,
+            disabled: true,
+          },
+          { required: true }
+        ),
         question: createControl(
           {
             label: "Вопрос",
@@ -132,6 +144,7 @@ export default class New extends Component {
       ],
     });
   };
+
   createQuizeHandler = async (event) => {
     event.preventDefault();
 
@@ -143,6 +156,12 @@ export default class New extends Component {
         isFormValid: false,
         rightAnswerId: 1,
         formControls: {
+          quizName: createControl(
+            {
+              label: "Название квиза",
+            },
+            { required: true }
+          ),
           question: createControl(
             {
               label: "Вопрос",
@@ -189,6 +208,7 @@ export default class New extends Component {
       console.log(e);
     }
   };
+
   changeHandler = (value, controlName) => {
     const formControls = { ...this.state.formControls };
     const options = this.state.options;
@@ -214,6 +234,7 @@ export default class New extends Component {
       isFormValid: validateForm(formControls),
     });
   };
+
   selectChangeHandler = (event) => {
     this.setState({
       rightAnswerId: +event.target.value,
@@ -223,6 +244,9 @@ export default class New extends Component {
   renderInputs() {
     return Object.keys(this.state.formControls).map((controlName, index) => {
       const control = this.state.formControls[controlName];
+      if (control.label === "Название квиза" && control.disabled) {
+        control.valid = true;
+      }
       return (
         <Input
           label={control.label}
@@ -232,6 +256,7 @@ export default class New extends Component {
           touched={control.touched}
           key={controlName + index}
           type={control.type}
+          disabled={control.disabled ? control.disabled : false}
           onChange={(event) =>
             this.changeHandler(event.target.value, controlName)
           }

@@ -23,26 +23,35 @@ class Quiz extends Component {
     return (
       <div className={classes.quiz}>
         <div className={classes.wrapper}>
-          <h1 className={classes.title}>Квиз</h1>
           {this.props.emptyFlag ? (
             <span className={classes.empty}>{this.props.error}</span>
           ) : this.props.loading ? (
             <Loader />
           ) : this.props.isFinished ? (
-            <FinishedQuiz
-              results={this.props.results}
-              quiz={this.props.quiz}
-              onRetry={this.props.retryQuiz}
-            />
+            <>
+              <h1 className={classes.title}>
+                {this.props.quiz[this.props.activeQuestion].quizName.value}
+              </h1>
+              <FinishedQuiz
+                results={this.props.results}
+                quiz={this.props.quiz}
+                onRetry={this.props.retryQuiz}
+              />
+            </>
           ) : (
-            <ActiveQuiz
-              answers={this.props.quiz[this.props.activeQuestion].answers}
-              question={this.props.quiz[this.props.activeQuestion].question}
-              quizLength={this.props.quiz.length}
-              answerNumber={this.props.activeQuestion + 1}
-              onAnswerClick={this.props.quizAnswerClick}
-              state={this.props.answerState}
-            />
+            <>
+              <h1 className={classes.title}>
+                {this.props.quiz[this.props.activeQuestion].quizName.value}
+              </h1>
+              <ActiveQuiz
+                answers={this.props.quiz[this.props.activeQuestion].answers}
+                question={this.props.quiz[this.props.activeQuestion].question}
+                quizLength={this.props.quiz.length}
+                answerNumber={this.props.activeQuestion + 1}
+                onAnswerClick={this.props.quizAnswerClick}
+                state={this.props.answerState}
+              />
+            </>
           )}
         </div>
       </div>

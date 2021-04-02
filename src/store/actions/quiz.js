@@ -22,7 +22,7 @@ export function fetchQuizes() {
         Object.keys(response.data).forEach((key, index) => {
           quizes.push({
             id: key,
-            name: `Тест №${index + 1}`,
+            name: `${index + 1}. ${response.data[key][0].quizName.value}`,
           });
         });
 
