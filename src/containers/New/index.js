@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import axios from "../../axios/config";
 import classes from "./New.module.sass";
 import Input from "../../components/UI/Input";
 import Select from "../../components/UI/Select";
@@ -98,24 +98,28 @@ export default class New extends Component {
         option1: createControl(
           {
             label: `Вариант №1`,
+            id: 1,
           },
           { required: true }
         ),
         option2: createControl(
           {
             label: `Вариант №2`,
+            id: 2,
           },
           { required: true }
         ),
         option3: createControl(
           {
             label: `Вариант №3`,
+            id: 3,
           },
           { required: true }
         ),
         option4: createControl(
           {
             label: `Вариант №4`,
+            id: 4,
           },
           { required: true }
         ),
@@ -132,10 +136,8 @@ export default class New extends Component {
     event.preventDefault();
 
     try {
-      await axios.post(
-        "https://ancla-assay-default-rtdb.firebaseio.com/quizes.json",
-        this.state.quiz
-      );
+      await axios.post(".json", this.state.quiz);
+
       this.setState({
         quiz: [],
         isFormValid: false,
