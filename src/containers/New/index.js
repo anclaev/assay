@@ -3,11 +3,12 @@ import classes from "./New.module.sass";
 import Input from "../../components/UI/Input";
 import Select from "../../components/UI/Select";
 import Button from "../../components/UI/Button";
-import { createControl } from "../../form";
+import { createControl, validate, validateForm } from "../../form";
 
 export default class New extends Component {
   state = {
     quiz: [],
+    isFormValid: false,
     rightAnswerId: 1,
     formControls: {
       question: createControl(
@@ -41,12 +42,42 @@ export default class New extends Component {
         { required: true }
       ),
     },
+    options: [
+      { text: "1", value: 1 },
+      { text: "2", value: 2 },
+      { text: "3", value: 3 },
+      { text: "4", value: 4 },
+    ],
   };
 
   submitHandler = (event) => event.preventDefault();
-  addQuestionHandler = () => {};
+  addQuestionHandler = (event) => {
+    event.preventDefault();
+  };
   createQuizeHandler = () => {};
-  changeHandler = (value, controlName) => {};
+  changeHandler = (value, controlName) => {
+    const formControls = { ...this.state.formControls };
+    const options = this.state.options;
+    const control = { ...formControls[controlName] };
+
+    control.touched = true;
+    control.value = value;
+    control.valid = validate(control.value, control.validation);
+
+    formControls[controlName] = control;
+
+    if (controlName.slice(0, controlName.length - 1) === "option") {
+      let index = controlName.slice(controlName.length - 1, controlName.length);
+      if (control.valid) options[index - 1].text = value;
+      else options[index - 1].text = index;
+    }
+
+    this.setState({
+      formControls,
+      options,
+      isFormValid: validateForm(formControls),
+    });
+  };
   selectChangeHandler = (event) => {
     this.setState({
       rightAnswerId: +event.target.value,
@@ -79,12 +110,7 @@ export default class New extends Component {
         label="Правильный ответ"
         value={this.state.rightAnswerId}
         onChange={this.selectChangeHandler}
-        options={[
-          { text: 1, value: 1 },
-          { text: 2, value: 2 },
-          { text: 3, value: 3 },
-          { text: 4, value: 4 },
-        ]}
+        options={this.state.options}
       />
     );
     return (
@@ -94,8 +120,18 @@ export default class New extends Component {
           <form onSubmit={this.submitHandler} className={classes.form}>
             {this.renderInputs()}
             {select}
-            <Button onClick={this.addQuestionHandler}>Добавить вопрос</Button>
-            <Button onClick={this.createQuizeHandler}>Создать тест</Button>
+            <Button
+              onClick={this.addQuestionHandler}
+              disabled={!this.state.isFormValid}
+            >
+              Добавить вопрос
+            </Button>
+            <Button
+              onClick={this.createQuizeHandler}
+              disabled={this.state.quiz.length === 0}
+            >
+              Создать тест
+            </Button>
           </form>
         </div>
       </div>
