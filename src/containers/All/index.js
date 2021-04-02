@@ -26,7 +26,7 @@ class All extends Component {
         <div className={classes.wrapper}>
           <h1 className={classes.title}>Квизы</h1>
           {this.props.emptyFlag ? (
-            <span className={classes.empty}>Квизы пока не созданы.</span>
+            <span className={classes.empty}>{this.props.error}</span>
           ) : null}
           {this.props.loading ? <Loader /> : <ul>{this.renderQuizes()}</ul>}
         </div>
@@ -40,6 +40,7 @@ const mapStateToProps = (state) => {
     quizes: state.quiz.quizes,
     loading: state.quiz.loading,
     emptyFlag: state.quiz.emptyFlag,
+    error: state.quiz.error,
   };
 };
 
